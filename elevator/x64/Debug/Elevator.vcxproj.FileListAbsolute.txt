@@ -1,0 +1,2 @@
+C:\Users\jakub\Desktop\Projekt4\Elevator\x64\Debug\Elevator.exe
+C:\Users\jakub\Desktop\elevator\x64\Debug\Elevator.exe
