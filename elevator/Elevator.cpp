@@ -71,9 +71,9 @@ void simulate(sf::Sprite& buttonf01, sf::Sprite& buttonf02, sf::Sprite& buttonf0
     buttonf45.setTexture(Button5);
     buttonf40.setPosition(sf::Vector2f(F4B, 280));
     buttonf41.setPosition(sf::Vector2f(F4B + k, 280));
-    buttonf42.setPosition(sf::Vector2f(F4B + 2*k, 280));
-    buttonf43.setPosition(sf::Vector2f(F4B + 3*k, 280));
-    buttonf45.setPosition(sf::Vector2f(F4B + 4*k, 280));
+    buttonf42.setPosition(sf::Vector2f(F4B + 2 * k, 280));
+    buttonf43.setPosition(sf::Vector2f(F4B + 3 * k, 280));
+    buttonf45.setPosition(sf::Vector2f(F4B + 4 * k, 280));
     buttonf20.setPosition(sf::Vector2f(F4B, 530));
     buttonf21.setPosition(sf::Vector2f(F4B + k, 530));
     buttonf23.setPosition(sf::Vector2f(F4B + 2 * k, 530));
@@ -81,9 +81,9 @@ void simulate(sf::Sprite& buttonf01, sf::Sprite& buttonf02, sf::Sprite& buttonf0
     buttonf25.setPosition(sf::Vector2f(F4B + 4 * k, 530));
     buttonf10.setPosition(sf::Vector2f(F3B, 650));
     buttonf12.setPosition(sf::Vector2f(F3B + k, 650));
-    buttonf13.setPosition(sf::Vector2f(F3B + 2*k, 650));
-    buttonf14.setPosition(sf::Vector2f(F3B +3*k, 650));
-    buttonf15.setPosition(sf::Vector2f(F3B+4*k, 650));
+    buttonf13.setPosition(sf::Vector2f(F3B + 2 * k, 650));
+    buttonf14.setPosition(sf::Vector2f(F3B + 3 * k, 650));
+    buttonf15.setPosition(sf::Vector2f(F3B + 4 * k, 650));
     buttonf30.setPosition(sf::Vector2f(F3B, 410));
     buttonf31.setPosition(sf::Vector2f(F3B + k, 410));
     buttonf32.setPosition(sf::Vector2f(F3B + 2 * k, 410));
@@ -96,16 +96,123 @@ void simulate(sf::Sprite& buttonf01, sf::Sprite& buttonf02, sf::Sprite& buttonf0
     buttonf54.setPosition(sf::Vector2f(F3B + 4 * k, 165));
     //------------------------------------------------------------------------------------------------
 
- 
+
     while (window.isOpen())
     {
 
         sf::Event event;
         while (window.pollEvent(event))
         {
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+                    sf::Vector2f worldPosition = window.mapPixelToCoords(mousePosition);
+
+                    if (buttonf10.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 10" << std::endl;
+                    }
+                    if (buttonf12.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 12" << std::endl;
+                    }
+                    if (buttonf13.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 13" << std::endl;
+                    }
+                    if (buttonf14.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 14" << std::endl;
+                    }
+                    if (buttonf15.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 15" << std::endl;
+                    }
+                    if (buttonf20.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 20" << std::endl;
+                    }
+                    if (buttonf21.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 21" << std::endl;
+                    }
+                    if (buttonf23.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 23" << std::endl;
+                    }
+                    if (buttonf24.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 24" << std::endl;
+                    }
+                    if (buttonf25.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 25" << std::endl;
+                    }
+                    if (buttonf30.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 30" << std::endl;
+                    }
+                    if (buttonf31.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 31" << std::endl;
+                    }
+                    if (buttonf32.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 32" << std::endl;
+                    }
+                    if (buttonf34.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 34" << std::endl;
+                    }
+                    if (buttonf35.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 35" << std::endl;
+                    }
+                    if (buttonf40.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 40" << std::endl;
+                    }
+                    if (buttonf41.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 41" << std::endl;
+                    }
+                    if (buttonf42.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 42" << std::endl;
+                    }
+                    if (buttonf43.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 43" << std::endl;
+                    }
+                    if (buttonf45.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 45" << std::endl;
+                    }
+                    if (buttonf50.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 50" << std::endl;
+                    }
+                    if (buttonf51.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 51" << std::endl;
+                    }
+                    if (buttonf52.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 52" << std::endl;
+                    }
+                    if (buttonf53.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 53" << std::endl;
+                    }
+                    if (buttonf54.getGlobalBounds().contains(worldPosition)) {
+
+                        std::cout << "Przycisk klikniety 54" << std::endl;
+                    }
+                }
+            }
             if (event.type == sf::Event::Closed) window.close();
         }
-        
+
         window.clear(sf::Color(255, 255, 255));
         display_background();
         window.draw(elevator);
