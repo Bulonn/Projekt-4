@@ -17,6 +17,22 @@ void display_background()
     window.draw(background);
 }
 
+
+float dis(float time, float velocity, bool kierunek)
+{
+    if (kierunek == 1)
+    {
+        return -(time * velocity);
+    }
+    else
+    {
+        return(time * velocity);
+    }
+
+
+}
+
+
 void info();
 
 class Elevator
