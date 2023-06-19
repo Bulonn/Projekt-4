@@ -32,6 +32,69 @@ public:
 
     std::vector<int> queue = {};
     std::vector<int> goals = {};
+
+    int set_height(int from_floor_number) //PODANIE WARTOSCI PIKSELI NA JAKA MA DOTRZEC elev NA PODSTAWIE NUMERU DOCELOWEGO PIETRA
+    {
+
+        switch (from_floor_number)
+        {
+        case 0:
+            return 634;
+            break;
+        case 1:
+            return 500;
+            break;
+        case 2:
+            return 377;
+            break;
+        case 3:
+            return 254;
+            break;
+        case 4:
+            return 131;
+            break;
+        case 5:
+            return 8;
+            break;
+        }
+    }
+
+
+
+    bool is_valid(int from_floor, float y_pos) //SPRAWDZENIE POPRAWNOSCI ZGLOSZENIA Z AKTUALNYM RUCHEM WINDY
+    {
+        if (direction == 1 && y_pos < set_height(from_floor))
+        {
+            return 0;
+        }
+        else if (direction == 0 && y_pos > set_height(from_floor))
+        {
+
+            return 0;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+
+
+    void set_direction(int from_floor) //USTAWIANIE KIERUNKU PORUSZANIA SIE WINDY
+    {
+        if (from_floor > current_floor)
+        {
+            direction = 1;
+        }
+        else if (from_floor < current_floor)
+        {
+            direction = 0;
+        }
+    }
+
+
+
+
+
 };
 Elevator e1;
 
