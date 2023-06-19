@@ -108,7 +108,13 @@ public:
                     set_direction(from_floor); //JAK PUSTA TO KOLEJNE ZGLOSZENIE NADAJE KIERUNEK
                 }
                 queue.push_back(from_floor);  //DODANIE DO KOLEJKI NUMERU Z KTOREGO elev JEST WZYWANA
-                goals.push_back(goal); //DODANIE DO KOLEJKI NUMERU NA KTORE elev MA DOJECHAC Z PIETRA WEZWANIA    
+                goals.push_back(goal); //DODANIE DO KOLEJKI NUMERU NA KTORE elev MA DOJECHAC Z PIETRA WEZWANIA
+                people = people_on_1 + people_on_2 + people_on_3 + people_on_4 + people_on_5 + current_weight;
+                if (from_floor == 1 && people < 8) people_on_1++;
+                if (from_floor == 2 && people < 8) people_on_2++;
+                if (from_floor == 3 && people < 8) people_on_3++;
+                if (from_floor == 4 && people < 8) people_on_4++;
+                if (from_floor == 5 && people < 8) people_on_5++;
             }
         }
         else if (current_weight == max_weight) //JESLI W WINDZIE ZNAJDUJE SIE MAKSYMALNA LICZBA OSOB
@@ -119,6 +125,7 @@ public:
     }
 
 
+    
     void el_simulate(Elevator& e1, float time, float velocity, sf::Sprite& elev, sf::Clock& clock)
     {
 
@@ -150,8 +157,15 @@ public:
                 while (container_1 != e1.queue.end())
                 {
                     e1.queue.erase(container_1);
-                    if (e1.current_weight != e1.max_weight) e1.current_weight++;
-                     //DODAJ TYLE LUDZI ILE CHCE WSIASC
+                    if (e1.current_weight != e1.max_weight) {
+                        if (elev.getPosition().y > 490 && elev.getPosition().y < 550) people_on_1--;
+                        if (elev.getPosition().y > 350 && elev.getPosition().y < 450) people_on_2--;
+                        if (elev.getPosition().y > 220 && elev.getPosition().y < 280) people_on_3--;
+                        if (elev.getPosition().y > 100 && elev.getPosition().y < 200) people_on_4--;
+                        if (elev.getPosition().y > 1 && elev.getPosition().y < 50) people_on_5--;
+                        e1.current_weight++;
+                    }
+                    ; //DODAJ TYLE LUDZI ILE CHCE WSIASC
                     container_1 = std::find(e1.queue.begin(), e1.queue.end(), e1.destiny);
                 }
                 //PRZESZUKAJ WEKTOR NUMEROW NA KTORE WINDA MA DOJECHAC Z PIETRA WEZWANIA
@@ -255,10 +269,51 @@ void simulate(sf::Sprite& buttonf01, sf::Sprite& buttonf02, sf::Sprite& buttonf0
     elevator.setTexture(Elevator);
     elevator.setPosition(sf::Vector2f(532, 634));
 
+    sf::Font font;
+    font.loadFromFile("ka1.ttf");
+    sf::Text cf, nf, cw, p1, p2, p3, p4, p5;;
+    cf.setFont(font);
+    cf.setCharacterSize(15);
+    cf.setFillColor(sf::Color::Black);
+    cf.setPosition(sf::Vector2f(50, 20));
 
+    nf.setFont(font);
+    nf.setCharacterSize(15);
+    nf.setFillColor(sf::Color::Black);
+    nf.setPosition(sf::Vector2f(50, 40));
 
-    //rozmieszczenie przyciskow
-    //------------------------------------------------------------------------------------------------
+    cw.setFont(font);
+    cw.setCharacterSize(15);
+    cw.setFillColor(sf::Color::Black);
+    cw.setPosition(sf::Vector2f(50, 60));
+
+    p1.setFont(font);
+    p1.setCharacterSize(15);
+    p1.setFillColor(sf::Color::Black);
+    p1.setPosition(sf::Vector2f(455, 530));
+
+    p2.setFont(font);
+    p2.setCharacterSize(15);
+    p2.setFillColor(sf::Color::Black);
+    p2.setPosition(sf::Vector2f(750, 410));
+
+    p3.setFont(font);
+    p3.setCharacterSize(15);
+    p3.setFillColor(sf::Color::Black);
+    p3.setPosition(sf::Vector2f(455, 285));
+
+    p4.setFont(font);
+    p4.setCharacterSize(15);
+    p4.setFillColor(sf::Color::Black);
+    p4.setPosition(sf::Vector2f(750, 165));
+
+    p5.setFont(font);
+    p5.setCharacterSize(15);
+    p5.setFillColor(sf::Color::Black);
+    p5.setPosition(sf::Vector2f(455, 44));
+
+    //ROZMIESZCZENIE PRZYCISKOW
+    //------------------------------------------------------------------------------------------------------------------------
     sf::Texture Button0, Button1, Button2, Button3, Button4, Button5;
     int k = 20;
     Button0.loadFromFile("button0.png");
@@ -322,126 +377,183 @@ void simulate(sf::Sprite& buttonf01, sf::Sprite& buttonf02, sf::Sprite& buttonf0
     buttonf52.setPosition(sf::Vector2f(F3B + 2 * k, 165));
     buttonf53.setPosition(sf::Vector2f(F3B + 3 * k, 165));
     buttonf54.setPosition(sf::Vector2f(F3B + 4 * k, 165));
-    //------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------------
 
+    float vel = 60.0f; //WSPOLCZYNNIK DO OBLICZANIE PREDKOSCI
+    sf::Clock clock, clock1; //ZEGAR
+    float time = 0.0f; //ZMIENNA PRZECHOWUJACA CZAS
 
-    while (window.isOpen())
+    while (window.isOpen()) //PETLA GLOWNA
     {
 
+        //NAPISY INFORMACYJNE
+        cf.setString("Current floor  " + std::to_string(e1.current_floor));
+        nf.setString("Next floor  " + std::to_string(e1.destiny));
+        cw.setString("People  " + std::to_string(e1.current_weight));
+        p1.setString(std::to_string(e1.people_on_1));
+        p2.setString(std::to_string(e1.people_on_2));
+        p3.setString(std::to_string(e1.people_on_3));
+        p4.setString(std::to_string(e1.people_on_4));
+        p5.setString(std::to_string(e1.people_on_5));
+
+
+        time = clock.restart().asSeconds();
         sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::MouseButtonPressed) {
+
                 if (event.mouseButton.button == sf::Mouse::Left) {
+
                     sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
                     sf::Vector2f worldPosition = window.mapPixelToCoords(mousePosition);
 
                     if (buttonf10.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 10" << std::endl;
+                        std::cout << "Wcisnieto 10" << std::endl;
+                        e1.get_tasks(1, 0, elevator.getPosition().y);
                     }
                     if (buttonf12.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 12" << std::endl;
+                        std::cout << "Wcisnieto 12" << std::endl;
+                        e1.get_tasks(1, 2, elevator.getPosition().y);
                     }
                     if (buttonf13.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 13" << std::endl;
+
+                        std::cout << "Wcisnieto 13" << std::endl;
+                        e1.get_tasks(1, 3, elevator.getPosition().y);
+
                     }
                     if (buttonf14.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 14" << std::endl;
+                        std::cout << "Wcisnieto 14" << std::endl;
+                        e1.get_tasks(1, 4, elevator.getPosition().y);
                     }
                     if (buttonf15.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 15" << std::endl;
+
+                        std::cout << "Wcisnieto 15" << std::endl;
+                        e1.get_tasks(1, 5, elevator.getPosition().y);
                     }
                     if (buttonf20.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 20" << std::endl;
+                        std::cout << "Wcisnieto 20" << std::endl;
+                        e1.get_tasks(2, 0, elevator.getPosition().y);
                     }
                     if (buttonf21.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 21" << std::endl;
+
+                        std::cout << "Wcisnieto 21" << std::endl;
+                        e1.get_tasks(2, 1, elevator.getPosition().y);
                     }
                     if (buttonf23.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 23" << std::endl;
+                        std::cout << "Wcisnieto 23" << std::endl;
+                        e1.get_tasks(2, 3, elevator.getPosition().y);
                     }
                     if (buttonf24.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 24" << std::endl;
+                        std::cout << "Wcisnieto 24" << std::endl;
+                        e1.get_tasks(2, 4, elevator.getPosition().y);
                     }
                     if (buttonf25.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 25" << std::endl;
+
+                        std::cout << "Wcisnieto 25" << std::endl;
+                        e1.get_tasks(2, 5, elevator.getPosition().y);
                     }
                     if (buttonf30.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 30" << std::endl;
+
+                        std::cout << "Wcisnieto 30" << std::endl;
+                        e1.get_tasks(3, 0, elevator.getPosition().y);
                     }
                     if (buttonf31.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 31" << std::endl;
+                        std::cout << "Wcisnieto 31" << std::endl;
+                        e1.get_tasks(3, 1, elevator.getPosition().y);
                     }
                     if (buttonf32.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 32" << std::endl;
+                        std::cout << "Wcisnieto 32" << std::endl;
+                        e1.get_tasks(3, 2, elevator.getPosition().y);
                     }
                     if (buttonf34.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 34" << std::endl;
+                        std::cout << "Wcisnieto 34" << std::endl;
+                        e1.get_tasks(3, 4, elevator.getPosition().y);
                     }
                     if (buttonf35.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 35" << std::endl;
+                        std::cout << "Wcisnieto 35" << std::endl;
+                        e1.get_tasks(3, 5, elevator.getPosition().y);
                     }
                     if (buttonf40.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 40" << std::endl;
+                        std::cout << "Wcisnieto 40" << std::endl;
+                        e1.get_tasks(4, 0, elevator.getPosition().y);
                     }
                     if (buttonf41.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 41" << std::endl;
+                        std::cout << "Wcisnieto 41" << std::endl;
+                        e1.get_tasks(4, 1, elevator.getPosition().y);
                     }
                     if (buttonf42.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 42" << std::endl;
+                        std::cout << "Wcisnieto 42" << std::endl;
+                        e1.get_tasks(4, 2, elevator.getPosition().y);
                     }
                     if (buttonf43.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 43" << std::endl;
+                        std::cout << "Wcisnieto 43" << std::endl;
+                        e1.get_tasks(4, 3, elevator.getPosition().y);
                     }
                     if (buttonf45.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 45" << std::endl;
+                        std::cout << "Wcisnieto 45" << std::endl;
+                        e1.get_tasks(4, 5, elevator.getPosition().y);
                     }
                     if (buttonf50.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 50" << std::endl;
+                        std::cout << "Wcisnieto 50" << std::endl;
+                        e1.get_tasks(5, 0, elevator.getPosition().y);
                     }
                     if (buttonf51.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 51" << std::endl;
+                        std::cout << "Wcisnieto 51" << std::endl;
+                        e1.get_tasks(5, 1, elevator.getPosition().y);
                     }
                     if (buttonf52.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 52" << std::endl;
+                        std::cout << "Wcisnieto 52" << std::endl;
+                        e1.get_tasks(5, 2, elevator.getPosition().y);
                     }
                     if (buttonf53.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 53" << std::endl;
+                        std::cout << "Wcisnieto 53" << std::endl;
+                        e1.get_tasks(5, 3, elevator.getPosition().y);
                     }
                     if (buttonf54.getGlobalBounds().contains(worldPosition)) {
 
-                        std::cout << "Przycisk klikniety 54" << std::endl;
+                        std::cout << "Wcisnieto 54" << std::endl;
+                        e1.get_tasks(5, 4, elevator.getPosition().y);
                     }
+
                 }
+            }
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+            {
+                info();
             }
             if (event.type == sf::Event::Closed) window.close();
         }
 
+        e1.el_simulate(e1, time, vel, elevator, clock);
+
         window.clear(sf::Color(255, 255, 255));
+        //WYSIWTELANIE SPRAJTOW
+        //------------------------------------------------------------------------------------------------------
         display_background();
         window.draw(elevator);
         window.draw(buttonf40);
@@ -469,13 +581,20 @@ void simulate(sf::Sprite& buttonf01, sf::Sprite& buttonf02, sf::Sprite& buttonf0
         window.draw(buttonf52);
         window.draw(buttonf53);
         window.draw(buttonf54);
+        window.draw(cf);
+        window.draw(nf);
+        window.draw(cw);
+        window.draw(p1);
+        window.draw(p2);
+        window.draw(p3);
+        window.draw(p4);
+        window.draw(p5);
+
+        //------------------------------------------------------------------------------------------------------
 
         window.display();
     }
-
 }
-
-
 
 int main()
 {
