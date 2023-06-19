@@ -17,6 +17,8 @@ void display_background()
     window.draw(background);
 }
 
+void info();
+
 class Elevator
 {
 public:
@@ -33,6 +35,30 @@ public:
 };
 Elevator e1;
 
+void info()
+{
+    std::cout << "|Znajdujemy sie na pietrze:" << e1.current_floor << "|";
+    std::cout << "|Ustawiono kierunek:" << e1.direction << "|";
+    std::cout << "|Liczba osob:" << e1.current_weight << "|";
+    std::cout << "|Aktualne wezwania na pietra:";
+
+    for (const auto& element : e1.queue)
+    {
+        std::cout << element << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "| Aktualny wektor celow : ";
+
+    for (const auto& element : e1.goals)
+    {
+        std::cout << element << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "| Cel : " << e1.destiny << " | ";
+
+}
 
 void simulate(sf::Sprite& buttonf01, sf::Sprite& buttonf02, sf::Sprite& buttonf03, sf::Sprite& buttonf04, sf::Sprite& buttonf05, sf::Sprite& buttonf10, sf::Sprite& buttonf12, sf::Sprite& buttonf13, sf::Sprite& buttonf14, sf::Sprite& buttonf15, sf::Sprite& buttonf20, sf::Sprite& buttonf21, sf::Sprite& buttonf23, sf::Sprite& buttonf24, sf::Sprite& buttonf25, sf::Sprite& buttonf30, sf::Sprite& buttonf31, sf::Sprite& buttonf32, sf::Sprite& buttonf34, sf::Sprite& buttonf35, sf::Sprite& buttonf40, sf::Sprite& buttonf41, sf::Sprite& buttonf42, sf::Sprite& buttonf43, sf::Sprite& buttonf45, sf::Sprite& buttonf50, sf::Sprite& buttonf51, sf::Sprite& buttonf52, sf::Sprite& buttonf53, sf::Sprite& buttonf54)
 {
