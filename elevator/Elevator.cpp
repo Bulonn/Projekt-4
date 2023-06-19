@@ -17,6 +17,21 @@ void display_background()
     window.draw(background);
 }
 
+class Elevator
+{
+public:
+
+    int current_floor = 0;
+    int current_weight = 0;
+    int destiny = 0;
+    int max_weight = 8;
+    int people_on_1 = 0, people_on_2 = 0, people_on_3 = 0, people_on_4 = 0, people_on_5 = 0, people;
+    bool direction = 1;
+
+    std::vector<int> queue = {};
+    std::vector<int> goals = {};
+};
+Elevator e1;
 
 
 void simulate(sf::Sprite& buttonf01, sf::Sprite& buttonf02, sf::Sprite& buttonf03, sf::Sprite& buttonf04, sf::Sprite& buttonf05, sf::Sprite& buttonf10, sf::Sprite& buttonf12, sf::Sprite& buttonf13, sf::Sprite& buttonf14, sf::Sprite& buttonf15, sf::Sprite& buttonf20, sf::Sprite& buttonf21, sf::Sprite& buttonf23, sf::Sprite& buttonf24, sf::Sprite& buttonf25, sf::Sprite& buttonf30, sf::Sprite& buttonf31, sf::Sprite& buttonf32, sf::Sprite& buttonf34, sf::Sprite& buttonf35, sf::Sprite& buttonf40, sf::Sprite& buttonf41, sf::Sprite& buttonf42, sf::Sprite& buttonf43, sf::Sprite& buttonf45, sf::Sprite& buttonf50, sf::Sprite& buttonf51, sf::Sprite& buttonf52, sf::Sprite& buttonf53, sf::Sprite& buttonf54)
