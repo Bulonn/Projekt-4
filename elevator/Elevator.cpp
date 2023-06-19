@@ -2,20 +2,14 @@
 #include <iostream>
 #include <string>
 
+
+
 sf::RenderWindow window(sf::VideoMode(1280, 720), "Elevator");
 sf::Sprite buttonf01, buttonf02, buttonf03, buttonf04, buttonf05, buttonf10, buttonf12, buttonf13, buttonf14, buttonf15, buttonf20, buttonf21, buttonf23, buttonf24, buttonf25, buttonf30, buttonf31, buttonf32, buttonf34, buttonf35, buttonf40, buttonf41, buttonf42, buttonf43, buttonf45, buttonf50, buttonf51, buttonf52, buttonf53, buttonf54;
 const int F4B = 770;
 const int F3B = 350;
 
-void display_background()
-{
-    sf::Texture Background;
-    sf::Sprite background;
-    Background.loadFromFile("background.png");
-    background.setTexture(Background);
-    background.setPosition(sf::Vector2f(52, 0));
-    window.draw(background);
-}
+
 
 
 float dis(float time, float velocity, bool kierunek)
@@ -32,7 +26,6 @@ float dis(float time, float velocity, bool kierunek)
 
 }
 
-
 void info();
 
 class Elevator
@@ -48,6 +41,8 @@ public:
 
     std::vector<int> queue = {};
     std::vector<int> goals = {};
+
+
 
     int set_height(int from_floor_number) //PODANIE WARTOSCI PIKSELI NA JAKA MA DOTRZEC elev NA PODSTAWIE NUMERU DOCELOWEGO PIETRA
     {
@@ -107,8 +102,6 @@ public:
         }
     }
 
-
-    
     void get_tasks(int from_floor, int goal, float y_pos) //TA FUNKCJA BEDZIE WYWOLYWANA TYLKO W MOMENCIE KLIKNIECIA PRZYCISKU
     {
 
@@ -124,7 +117,7 @@ public:
                     set_direction(from_floor); //JAK PUSTA TO KOLEJNE ZGLOSZENIE NADAJE KIERUNEK
                 }
                 queue.push_back(from_floor);  //DODANIE DO KOLEJKI NUMERU Z KTOREGO elev JEST WZYWANA
-                goals.push_back(goal); //DODANIE DO KOLEJKI NUMERU NA KTORE elev MA DOJECHAC Z PIETRA WEZWANIA
+                goals.push_back(goal); //DODANIE DO KOLEJKI NUMERU NA KTORE elev MA DOJECHAC Z PIETRA WEZWANIA    
                 people = people_on_1 + people_on_2 + people_on_3 + people_on_4 + people_on_5 + current_weight;
                 if (from_floor == 1 && people < 8) people_on_1++;
                 if (from_floor == 2 && people < 8) people_on_2++;
@@ -141,7 +134,6 @@ public:
     }
 
 
-    
     void el_simulate(Elevator& e1, float time, float velocity, sf::Sprite& elev, sf::Clock& clock)
     {
 
@@ -174,6 +166,7 @@ public:
                 {
                     e1.queue.erase(container_1);
                     if (e1.current_weight != e1.max_weight) {
+                        
                         if (elev.getPosition().y > 490 && elev.getPosition().y < 550) people_on_1--;
                         if (elev.getPosition().y > 350 && elev.getPosition().y < 450) people_on_2--;
                         if (elev.getPosition().y > 220 && elev.getPosition().y < 280) people_on_3--;
@@ -203,14 +196,24 @@ public:
         else if (e1.queue.empty() && !e1.goals.empty()) //JESLI JUZ NIKT NIE WZYWA A W WINDZIE NADAL ZNAJDUJA SIE OSOBY KTORE TRZEBA ODWIEZC 
         {
             //USTAWIANIE NAJBLIZSZEGO DOCELOWEGO PIETRA
-            if (e1.goals[e1.goals.size() - 1] < e1.current_floor) e1.direction = 0;
-            if (e1.direction == 1)
+            if (e1.goals[e1.goals.size() - 1] < e1.current_floor)
             {
-                e1.destiny = e1.goals[0];
-            }
-            else if (direction == 0)
-            {
+                e1.direction = 0;
                 e1.destiny = e1.goals[e1.goals.size() - 1];
+               
+            }
+            else
+            {
+                int minHigher = std::numeric_limits<int>::max();
+                for (int goal : goals) 
+                {
+                    if (goal > e1.current_floor && goal < minHigher)
+                    {
+                        minHigher = goal;
+                    }
+                }
+                e1.destiny = minHigher;
+
 
             }
             //JEDZ NA TE PIETRO AZ OSIAGNIE WYSOKOSC
@@ -240,6 +243,7 @@ public:
         {
             e1.direction = 0; //KIERUNEK W DOL
             get_tasks(NULL, 0, elev.getPosition().y); //PRZYJMIJ ZLECENIE NA JAZDE NA PIETRO 0
+            e1.queue.erase(e1.queue.begin());
             //ODCZEKAJ I ZJEDZ
             sf::sleep(sf::seconds(3));
             clock.restart();
@@ -277,31 +281,47 @@ void info()
 
 }
 
+void display_background()
+{
+    sf::Texture Background;
+    sf::Sprite background;
+    Background.loadFromFile("background.png");
+    background.setTexture(Background);
+    background.setPosition(sf::Vector2f(52, 0));
+    window.draw(background);
+}
+
 void simulate(sf::Sprite& buttonf01, sf::Sprite& buttonf02, sf::Sprite& buttonf03, sf::Sprite& buttonf04, sf::Sprite& buttonf05, sf::Sprite& buttonf10, sf::Sprite& buttonf12, sf::Sprite& buttonf13, sf::Sprite& buttonf14, sf::Sprite& buttonf15, sf::Sprite& buttonf20, sf::Sprite& buttonf21, sf::Sprite& buttonf23, sf::Sprite& buttonf24, sf::Sprite& buttonf25, sf::Sprite& buttonf30, sf::Sprite& buttonf31, sf::Sprite& buttonf32, sf::Sprite& buttonf34, sf::Sprite& buttonf35, sf::Sprite& buttonf40, sf::Sprite& buttonf41, sf::Sprite& buttonf42, sf::Sprite& buttonf43, sf::Sprite& buttonf45, sf::Sprite& buttonf50, sf::Sprite& buttonf51, sf::Sprite& buttonf52, sf::Sprite& buttonf53, sf::Sprite& buttonf54)
 {
-    sf::Texture Elevator;
+    sf::Texture Elevator, Elevator1;
     sf::Sprite elevator;
     Elevator.loadFromFile("elevator.png");
-    elevator.setTexture(Elevator);
+    Elevator1.loadFromFile("elevator1.png");
+    elevator.setTexture(Elevator1);
     elevator.setPosition(sf::Vector2f(532, 634));
 
     sf::Font font;
     font.loadFromFile("ka1.ttf");
-    sf::Text cf, nf, cw, p1, p2, p3, p4, p5;;
+    sf::Text cf, nf, p, cw, p1, p2, p3, p4, p5;;
     cf.setFont(font);
     cf.setCharacterSize(15);
     cf.setFillColor(sf::Color::Black);
-    cf.setPosition(sf::Vector2f(50, 20));
+    cf.setPosition(sf::Vector2f(30, 20));
 
     nf.setFont(font);
     nf.setCharacterSize(15);
     nf.setFillColor(sf::Color::Black);
-    nf.setPosition(sf::Vector2f(50, 40));
+    nf.setPosition(sf::Vector2f(30, 40));
 
     cw.setFont(font);
     cw.setCharacterSize(15);
     cw.setFillColor(sf::Color::Black);
-    cw.setPosition(sf::Vector2f(50, 60));
+    cw.setPosition(sf::Vector2f(30, 60));
+
+    p.setFont(font);
+    p.setCharacterSize(15);
+    p.setFillColor(sf::Color::Black);
+    p.setPosition(sf::Vector2f(30, 80));
 
     p1.setFont(font);
     p1.setCharacterSize(15);
@@ -401,11 +421,12 @@ void simulate(sf::Sprite& buttonf01, sf::Sprite& buttonf02, sf::Sprite& buttonf0
 
     while (window.isOpen()) //PETLA GLOWNA
     {
-
+        int current_weight_kg = e1.current_weight * 70;
         //NAPISY INFORMACYJNE
         cf.setString("Current floor  " + std::to_string(e1.current_floor));
         nf.setString("Next floor  " + std::to_string(e1.destiny));
         cw.setString("People  " + std::to_string(e1.current_weight));
+        p.setString("Current weight  " + std::to_string(current_weight_kg) + " kg");
         p1.setString(std::to_string(e1.people_on_1));
         p2.setString(std::to_string(e1.people_on_2));
         p3.setString(std::to_string(e1.people_on_3));
@@ -600,6 +621,7 @@ void simulate(sf::Sprite& buttonf01, sf::Sprite& buttonf02, sf::Sprite& buttonf0
         window.draw(cf);
         window.draw(nf);
         window.draw(cw);
+        window.draw(p);
         window.draw(p1);
         window.draw(p2);
         window.draw(p3);
