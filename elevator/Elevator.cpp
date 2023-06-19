@@ -92,9 +92,133 @@ public:
     }
 
 
+    
+    void get_tasks(int from_floor, int goal, float y_pos) //TA FUNKCJA BEDZIE WYWOLYWANA TYLKO W MOMENCIE KLIKNIECIA PRZYCISKU
+    {
+
+        if (current_weight < max_weight) //SPRAWDZENIE CZY elev NIE JEST PRZEPELNIONA
+        {
+
+            if (is_valid(from_floor, y_pos)) //SPRAWDZENIE CZY ZGLOSZENIE SPELNIA WARUNKI WEZWANIA
+            {
+
+                if (current_weight == 0) //SPRAWDZENIE CZY elev JEST PUSTA
+                {
+
+                    set_direction(from_floor); //JAK PUSTA TO KOLEJNE ZGLOSZENIE NADAJE KIERUNEK
+                }
+                queue.push_back(from_floor);  //DODANIE DO KOLEJKI NUMERU Z KTOREGO elev JEST WZYWANA
+                goals.push_back(goal); //DODANIE DO KOLEJKI NUMERU NA KTORE elev MA DOJECHAC Z PIETRA WEZWANIA    
+            }
+        }
+        else if (current_weight == max_weight) //JESLI W WINDZIE ZNAJDUJE SIE MAKSYMALNA LICZBA OSOB
+        {
+            std::cout << "  | WINDA PRZECIAZONA, PROSZE CZEKAC AZ ZWOLNI SIE MIEJSCE |";
+            return;
+        }
+    }
 
 
+    void el_simulate(Elevator& e1, float time, float velocity, sf::Sprite& elev, sf::Clock& clock)
+    {
 
+
+        elev.getPosition().y;
+        std::sort(e1.queue.begin(), e1.queue.end()); //POSORTOWANIE WEKTORA NUMEROW Z KTORYCH WINDA JEST WZYWANA
+        std::sort(e1.goals.begin(), e1.goals.end()); //POSORTOWANIE WEKTORA NUMEROW NA KTORE WINDA MA DOJECHAC Z PIETRA WEZWANIA
+
+        if (!e1.queue.empty()) //JESLI NADAL SA ZGLOSZENIA Z JAKIEGOS PIETRA 
+        {
+            //USTAWIANIE NAJBLIZSZEGO DOCELOWEGO PIETRA
+            if (e1.direction == 1)
+            {
+                e1.destiny = e1.queue[0];
+            }
+            else if (e1.direction == 0)
+            {
+                e1.destiny = e1.queue[queue.size() - 1];
+            }
+            //JEDZ NA TE PIETRO AZ OSIAGNIE WYSOKOSC
+            if ((e1.direction == 1 && (elev.getPosition().y > e1.set_height(e1.destiny))) || (e1.direction == 0 && (elev.getPosition().y < e1.set_height(e1.destiny))))
+            {
+                elev.move(0, dis(time, velocity, e1.direction)); //PRZESUN O OBLICZONA WARTOSC
+            }
+            else //WINDA DOTARLA NA DOCELOWA WYSOKOSC 
+            {
+                //JESLI OSIAGNELA TO PRZESZUKAJ WEKTOR NUMEROW Z KTORYCH WINDA JEST WZYWANA
+                auto container_1 = std::find(e1.queue.begin(), e1.queue.end(), e1.destiny);
+                while (container_1 != e1.queue.end())
+                {
+                    e1.queue.erase(container_1);
+                    if (e1.current_weight != e1.max_weight) e1.current_weight++;
+                     //DODAJ TYLE LUDZI ILE CHCE WSIASC
+                    container_1 = std::find(e1.queue.begin(), e1.queue.end(), e1.destiny);
+                }
+                //PRZESZUKAJ WEKTOR NUMEROW NA KTORE WINDA MA DOJECHAC Z PIETRA WEZWANIA
+                auto container_2 = std::find(e1.goals.begin(), e1.goals.end(), e1.destiny);
+                while (container_2 != e1.goals.end())
+                {
+                    e1.goals.erase(container_2);
+                    if (e1.current_weight > 0) e1.current_weight--; //USUN TYLE LUDZI ILE CHCE WYSIASC
+                    container_2 = std::find(e1.goals.begin(), e1.goals.end(), e1.destiny);
+                }
+                e1.current_floor = e1.destiny; //ZAKTUALIZUJ AKTUALNY NUMER PIETRA
+
+                sf::sleep(sf::seconds(2));
+                clock.restart();
+
+
+            }
+        }
+        else if (e1.queue.empty() && !e1.goals.empty()) //JESLI JUZ NIKT NIE WZYWA A W WINDZIE NADAL ZNAJDUJA SIE OSOBY KTORE TRZEBA ODWIEZC 
+        {
+            //USTAWIANIE NAJBLIZSZEGO DOCELOWEGO PIETRA
+            if (e1.goals[e1.goals.size() - 1] < e1.current_floor) e1.direction = 0;
+            if (e1.direction == 1)
+            {
+                e1.destiny = e1.goals[0];
+            }
+            else if (direction == 0)
+            {
+                e1.destiny = e1.goals[e1.goals.size() - 1];
+
+            }
+            //JEDZ NA TE PIETRO AZ OSIAGNIE WYSOKOSC
+            if ((e1.direction == 1 && (elev.getPosition().y > e1.set_height(e1.destiny))) || (e1.direction == 0 && (elev.getPosition().y < e1.set_height(e1.destiny))))
+            {
+                elev.move(0, dis(time, velocity, direction));
+            }
+            else //WINDA DOTARLA NA DOCELOWA WYSOKOSC 
+            {
+                //PRZESZUKAJ WEKTOR NUMEROW NA KTORE WINDA MA DOJECHAC Z PIETRA WEZWANIA
+                auto container_2 = std::find(e1.goals.begin(), e1.goals.end(), e1.destiny);
+                while (container_2 != e1.goals.end())
+                {
+                    e1.goals.erase(container_2);
+                    if (e1.current_weight > 0) e1.current_weight--; //USUN TYLE LUDZI ILE CHCE WYSIASC
+                    container_2 = std::find(e1.goals.begin(), e1.goals.end(), e1.destiny);
+
+                }
+                e1.current_floor = e1.destiny; //ZAKTUALIZUJ AKTUALNY NUMER PIETRA
+
+                sf::sleep(sf::seconds(2));
+                clock.restart();
+
+            }
+        }
+        else if (e1.queue.empty() && e1.goals.empty() && current_floor != 0) //BRAK WEZWAN I WINDA W POLOZENIU INNYM NIZ PIETRO 0
+        {
+            e1.direction = 0; //KIERUNEK W DOL
+            get_tasks(NULL, 0, elev.getPosition().y); //PRZYJMIJ ZLECENIE NA JAZDE NA PIETRO 0
+            //ODCZEKAJ I ZJEDZ
+            sf::sleep(sf::seconds(3));
+            clock.restart();
+        }
+        else if (e1.queue.empty() && e1.goals.empty() && current_floor == 0) //WINDA W POCZTAKOWYM POLOZENIU I CZEKA NA ZLECENIA
+        {
+            e1.direction = 1;
+        }
+    }
 };
 Elevator e1;
 
